@@ -1,0 +1,16 @@
+<html ng-app="NHApp">
+  <head>
+    <link href="https://dist.damon.ch/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="css/app.css" rel="stylesheet" type="text/css"/>
+  </head>
+  <body ng-keydown="keyDown($event)" ng-keyup="keyUp($event)" ng-controller="GameController">
+    <textarea readonly disabled class="consoleOut">{{consoleOut}}</textarea>
+    <div ng-show="lost == true" class="lost">
+      <h1>You died!</h1>
+      <h3>Rounds survived: {{rounds}}</h3>
+    </div>
+    <script src="https://dist.damon.ch/angular/angular.min.js"></script>
+    <script src="https://dist.damon.ch/angular/angular-cookies.min.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

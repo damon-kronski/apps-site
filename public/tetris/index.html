@@ -1,0 +1,12 @@
+<html ng-app="SnakeApp">
+<head>
+  <link href="css/style.css" rel="stylesheet"/>
+</head>
+<body ng-keydown="keyDown($event)" ng-controller="GameController">
+<textarea ng-keydown="keyDown($event)" readonly disabled class="output">{{output}}</textarea>
+<div class="gameOver" ng-show="gameOver == true">GAME OVER!<br><a ng-click="resetGame()">Restart</a></div>
+
+<script src="https://dist.damon.ch/angular/angular.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

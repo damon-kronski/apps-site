@@ -1,0 +1,39 @@
+.output
+{
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-family: Menlo;
+  src: url(https://damon.ch/fonts/Menlo-Regular.ttf);
+  line-height: 0.9;
+}
+
+.gameOver {
+    position: absolute;
+    font-family: consolas;
+    width: 150px;
+    height: 60px;
+    left: 50%;
+    top: 50%;
+    margin-left: -75px;
+    margin-top: -50px;
+    text-align: center;
+    color: red;
+    background-color: #FFF;
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.gameOver a{
+    background-color: #333;
+    padding: 5px;
+    margin: 5px;
+    display: block;
+    border-radius: 5px;
+    color: #FFF;
+}
+
+.gameOver a:hover{
+  background-color: #999;
+}

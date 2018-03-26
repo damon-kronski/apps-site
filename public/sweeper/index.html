@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en-US" ng-app="msApp">
+<head>
+	<script src="https://dist.damon.ch/angular/angular.min.js"></script>
+	<script src="app.js"></script>
+	<style>
+	*{font-family:arial;}
+	html,body{margin:0px;padding:0px;width:100%;}
+	.field{margin:0px; padding:0px;}
+	.field td{border:0px solid black;width:27px; height:27px;text-align:center; vertical-align:middle;padding:0px;}
+	.cell{width:100%;height:100%;margin:0px;background-color:#CCCCCC;border:1px solid black;}
+	span.bomb{color:red}
+	.btn{border:0px;padding:5px 15px; background-color:#AAAAAA;color:#FFFFFF;}
+	.btn-box{ margin-bottom:15px;}
+	.container{text-align:center;}
+	.field{display:inline}
+	.state-box{position:fixed;top:50%; height: 100px;width:100%;text-align:center}
+	.state-box.won{background-color:#DDFFDD;color:#00AA00;}
+	.state-box.lost{background-color:#FFDDDD;color:#FF0000;}
+	.state-box.loading{background-color:#DDDDFF;color:#0000FF;}
+	.settings{margin-top:5px;}
+	.field .score{text-align:left;}
+	.cell.marked{background-color:#FF2222;}
+	.howto{display:inline-block;max-width:350px;margin-top:10px;}
+	</style>
+</head>
+<body>
+	<div ng-controller="msCtrl" class="container">
+	  <h1>Sweeper</h1>
+	  <div class="btn-box">
+		<button ng-click="reset()" class="btn">Reset</button>
+		</div>
+	  <table class="field">
+		<tr>
+		<td class="score" colspan="500">Score: {{score}}</td>
+		</tr>
+		<tr ng-repeat="row in cells">
+			<td ng-repeat="cell in cells[$index] track by $index"><span ng-class="cells[$parent.$index][$index] == mineSymbol ? 'bomb':''" ng-show="openCells[$parent.$index][$index]">{{cell}}</span><button ng-class="markedCells[$parent.$index][$index] ? 'marked':''"  ng-right-click="markBtn($parent.$index,$index)" ng-hide="openCells[$parent.$index][$index]" ng-click="btnClick($parent.$index,$index)" class="cell"></button></td>
+		</tr>
+	  </table>
+	  <div class="settings">
+	  <label>Difficulty</label>
+	  <select ng-model="dificulties.selected" ng-options="diff.name for diff in dificulties.options track by diff.name"></select>
+	  <label>Size</label>
+	  <select ng-model="sizes.selected" ng-options="s.name for s in sizes.options track by s.name"></select>
+	  </div>
+	  <div class="howto">How to Play:<br>Click on the squares to open them. Don't click on a bomb. The numbers indecate how many bombs are around them. If you wanna mark a square click with the right mouse button (or hold on a mobile phone).</div>
+	  <div class="state-box" ng-class="{won: state == stateWon,lost: state == stateLost,loading: state == stateLoad}" ng-hide="state == ''">
+		<h3>{{state}}</h3>
+	  <button ng-click="reset()" ng-hide="state == stateLoad" class="btn">Restart</button>
+	  </div>
+	</div>
+</body>
+</html>
+

@@ -1,0 +1,149 @@
+<html ng-app="YahtzeeApp">
+	<head>
+		<link href="https://dist.damon.ch/bootstrap/bootstrap.min.css" rel="stylesheet"/>
+		<link href="https://dist.damon.ch/open-iconic/font/css/open-iconic.css" rel="stylesheet">
+		<link href="https://dist.damon.ch/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+		<style>
+			.img-thumbnail.dice
+			{border: 0px;}
+			.clear{margin: 10px 0px;}
+		</style>
+	</head>
+	<body ng-controller="YahtzeeController" class="container">
+		<div class="row">
+			<div class="col" ng-repeat="dice in dices track by $index">
+				<img src="faces/{{dice[0]}}.png" alt="{{dice[0]}}" class="img-thumbnail dice">
+				<button ng-disabled="checkEnd()" ng-click="lockDice($index)" class="btn btn-block" ng-class="{'btn-success': dice[1], 'btn-danger': !dice[1]}">
+					<span class="oi" ng-class="{'oi-lock-unlocked': dice[1], 'oi-lock-locked': !dice[1]}" aria-hidden="true"></span>
+				</button>
+			</div>
+			<div class="col">
+				<h3>Throws: {{rounds}}</h3>
+				<button ng-click="calcDices()" ng-disabled="rounds >= 3 || checkEnd()" class="btn btn-block btn-primary">
+						<span class="oi oi-media-play" aria-hidden="true"></span> Throw Dices
+				</button>
+				<button ng-click="restartGame()" ng-disabled="rounds >= 3" class="btn btn-block" ng-class="{'btn-success' : checkEnd(), 'btn-danger' : !checkEnd()}">
+						<span class="oi oi-reload" aria-hidden="true"></span> {{checkEnd() ? 'Start New Game' : 'Restart Game'}}
+				</button>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<h3>Upper Section</h3>
+		<div class="row">
+			<div class="col-6" ng-repeat="field in fields | filter:{top:true} track by $index">
+				<div class="row">
+					<div class="col-5">
+						{{field.name}}
+					</div>
+					<div class="col-5 text-right">
+						<span class="text-muted" ng-hide="field.set || !field.check()">{{field.calcValue()}}</span>
+						<span class="" ng-show="field.set">{{field.value}}</span>
+					</div>
+					<div class="col-2">
+						<button ng-click="setField(field.id)" ng-hide="field.set" ng-disabled="rounds < 3 && !field.check()" class="btn btn-primary">
+								<span class="oi oi-arrow-thick-left" aria-hidden="true"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+				<div class="col-6"></div>
+			<div class="col-6">
+				<div class="row">
+					<div class="col-5">
+						<input disabled type="text" class="form-control-plaintext text-primary" value="Upper Section"/>
+					</div>
+					<div class="col-5">
+						<input disabled type="text" class="form-control  text-primary" value="{{totalUpper()}}"/>
+					</div>
+				</div>
+			</div>
+			<div class="col-6"></div>
+			<div class="col-6">
+				<div class="row">
+					<div class="col-5">
+						<input disabled type="text" class="form-control-plaintext text-primary" value="Bonus (63 or over)"/>
+					</div>
+					<div class="col-5">
+						<input disabled type="text" class="form-control  text-primary" value="{{bonusTop()}}"/>
+					</div>
+				</div>
+			</div>
+			<div class="col-6"></div>
+			<div class="col-6">
+				<div class="row">
+					<div class="col-5">
+						<input disabled type="text" class="form-control-plaintext text-primary" value="Total Upper Section"/>
+					</div>
+					<div class="col-5">
+						<input disabled type="text" class="form-control  text-primary" value="{{totalUpper() + bonusTop()}}"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<h3>Lower Section</h3>
+		<div class="row">
+			<div class="col-6" ng-repeat="field in fields | filter:{top:false} track by $index">
+				<div class="row">
+					<div class="col-5">
+						{{field.name}}
+					</div>
+					<div class="col-5 text-right">
+						<span class="text-muted" ng-hide="field.set || !field.check()">{{field.calcValue()}}</span>
+						<span class="" ng-show="field.set">{{field.value}}</span>
+					</div>
+					<div class="col-2">
+						<button ng-click="setField(field.id)" ng-hide="field.set" ng-disabled="needEmpty() &&  !field.check()" class="btn btn-primary">
+								<span class="oi oi-arrow-thick-left" aria-hidden="true"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-6"></div>
+			<div class="col-6"></div>
+			<div class="col-6">
+				<div class="row">
+					<div class="col-5">
+						<input disabled type="text" class="form-control-plaintext text-primary" value="Total Lower Section"/>
+					</div>
+					<div class="col-5">
+						<input disabled type="text" class="form-control  text-primary" value="{{totalLower()}}"/>
+					</div>
+				</div>
+			</div>
+			<div class="col-6"></div>
+			<div class="col-6">
+				<div class="row">
+					<div class="col-5">
+						<input disabled type="text" class="form-control-plaintext text-primary" value="Grand Total"/>
+					</div>
+					<div class="col-5">
+						<input disabled type="text" class="form-control text-primary" value="{{grandTotal()}}"/>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<h3>Local History</h3>
+		<table class="table">
+			<tr>
+				<th>Date</th>
+				<th>Upper</th>
+				<th>Bonus</th>
+				<th>Lower</th>
+				<th>Total</th>
+			</tr>
+			<tr ng-repeat="game in historyGames">
+				<td>{{game.date}}</td>
+				<td>{{game.upper}}</td>
+				<td>{{game.bonus}}</td>
+				<td>{{game.lower}}</td>
+				<td>{{game.total}}</td>
+			</tr>
+		</table>
+
+		<script src="https://dist.damon.ch/angular/angular.min.js"></script>
+		<script src="https://dist.damon.ch/angular/angular-cookies.min.js"></script>
+		<script src="app.js"></script>
+	</body>
+</html>
